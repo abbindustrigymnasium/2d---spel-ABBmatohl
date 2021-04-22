@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class birdcactus : MonoBehaviour
 {
     public float moveSpeed;
+    public Transform Dino;
 
 
 
@@ -22,6 +23,20 @@ public class birdcactus : MonoBehaviour
 
         if (transform.position.x < -13f)
             Destroy(gameObject);
+
+
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag.Equals("Dino"))
+            DinoHit();
+    }
+    public void DinoHit()
+    {
+        Debug.Log("hit");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
     }
 
 }
