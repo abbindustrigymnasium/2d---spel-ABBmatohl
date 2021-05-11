@@ -5,9 +5,9 @@ using UnityEngine;
 public class SpawnerScript : MonoBehaviour
 
 {
-    public GameObject[] obstacles;
+    public GameObject[] obstacles;      //array med alla hinder
     float lastTime;
-    float timeBetween = 1.5f;
+    float timeBetween = 1.5f;       //1,5s mellan tiden då objekt kan spawnas
     // Start is called before the first frame update
     void Start()
     {
@@ -22,15 +22,15 @@ public class SpawnerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        float r = Random.Range(0f, 1f);
-        Debug.Log(r + "random num");
-        if (Time.time >= lastTime + timeBetween && r < 0.1f)
+        float r = Random.Range(0f, 1f);     //r är ett tal mellan 0 och 1
+        //Debug.Log(r + "random num");
+        if (Time.time % timeBetween == 0 && r < 0.75f)      //Varje 1,5s finns det 75% chans att spawna
         {
 
-            Debug.Log("obstacle");
-            GameObject newObstacle = Instantiate(obstacles[Random.Range(0, obstacles.Length)]);
+            //Debug.Log("obstacle");
+            GameObject newObstacle = Instantiate(obstacles[Random.Range(0, obstacles.Length)]);     //skapar ett random hinder från arrayen obstacles
 
-            lastTime = Time.time;
+            lastTime = Time.time;   //ändrar lasttime till den nuvarande tiden
         }
 
 

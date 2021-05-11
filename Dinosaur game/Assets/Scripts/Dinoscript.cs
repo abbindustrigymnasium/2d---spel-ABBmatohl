@@ -14,12 +14,17 @@ public class Dinoscript : MonoBehaviour
     public Transform feet;
     public Animator animator;
     public GameObject GameOverScene;
+    private float lastJump;
+
+    AudioSource jumpSound;
+
+    public AudioSource loseSound;
 
 
     // Start is called before the first frame update
     void Start()
     {
-
+        jumpSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -27,18 +32,18 @@ public class Dinoscript : MonoBehaviour
     {
         if (Input.GetKey("s"))
         {
-            ifCrouchKeyPressed = true;
-            Debug.Log("6");
+            ifCrouchKeyPressed = true;      //om s trycks ner är isCrouchKeyPressed true
+
 
         }
         else if (IsGrounded())
         {
-            ifCrouchKeyPressed = false;
-            Debug.Log("3");
+            ifCrouchKeyPressed = false;     //Är man groundne blir crouchkeypressed false
+
 
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))        //Om w trycks så blir IsCrouching false och ifJumpKeyPressed true
         {
             ifJumpKeyPressed = true;
             Debug.Log("Jumped");
@@ -55,19 +60,21 @@ public class Dinoscript : MonoBehaviour
 
 
 
-        if (ifJumpKeyPressed && IsGrounded())
+        if (ifJumpKeyPressed && IsGrounded())   //om w klickas och man är grounden så hoppar man,lastJump blir tiden som är och animationen byts
         {
             Debug.Log("Jumped");
-
+            animator.SetBool("IsJumping", true);
             player.AddForce(Vector2.up * JumpHight, ForceMode2D.Impulse);
             ifJumpKeyPressed = false;
+            jumpSound.Play();
+            lastJump = Time.time;
 
 
         }
 
 
 
-        if (ifCrouchKeyPressed)
+        if (ifCrouchKeyPressed)     //är det true så ökar gravitationen, hitboxen ändras och animationen ändras
         {
 
             player.gravityScale = CrouchForce;
@@ -75,7 +82,7 @@ public class Dinoscript : MonoBehaviour
             gameObject.GetComponent<BoxCollider2D>().enabled = true;
             gameObject.GetComponent<PolygonCollider2D>().enabled = false;
         }
-        else if (!ifCrouchKeyPressed)
+        else if (!ifCrouchKeyPressed)   //är det false så blir gravitationen normal, animationen ändras och hitboxen ändras 
         {
 
             player.gravityScale = 3.0f;
@@ -91,34 +98,39 @@ public class Dinoscript : MonoBehaviour
     public bool IsGrounded()
     {
 
-        Collider2D groundCheck = Physics2D.OverlapCircle(feet.position, 0.5f, groundLayers);
+        Collider2D groundCheck = Physics2D.OverlapCircle(feet.position, 0.5f, groundLayers);    //den är grounded ifall dinosauriens fötter träffar marken
 
 
-        if (groundCheck != null)
+        if (groundCheck != null && Time.time - 0.1f > lastJump) //om groundcheck stämmer och det gått 0.1s sen förra hoppet så är ändras animationen
         {
+            animator.SetBool("IsJumping", false);
+
             Debug.Log("grounded" + groundCheck);
             return true;
+
         }
         return false;
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    void OnCollisionEnter2D(Collision2D col)    //Om dino springer in i ett hinder startas DinoHit funktionen
     {
         if (col.gameObject.tag.Equals("death"))
             DinoHit();
     }
-    public void DinoHit()
+    public void DinoHit()       //startar dinohit så fryser spelet och gameroverscenen kommer fram
     {
         Debug.Log("hit");
         Time.timeScale = 0;
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         GameOverScene.SetActive(true);
+        loseSound.Play();
+
     }
 
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);       //Startar om scenen
     }
 
 

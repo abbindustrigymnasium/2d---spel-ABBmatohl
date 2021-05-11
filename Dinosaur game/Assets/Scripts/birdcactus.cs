@@ -27,7 +27,7 @@ public class birdcactus : MonoBehaviour
         transform.position.y);//rör föremålet åt vänster
 
         if (transform.position.x < -18f)
-            Destroy(gameObject);
+            Destroy(gameObject);    //om föremålet är tillräckligt långt åt vänster förstörs det(förhindrar lag)
 
 
 

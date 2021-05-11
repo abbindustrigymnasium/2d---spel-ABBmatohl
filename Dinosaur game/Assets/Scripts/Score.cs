@@ -11,20 +11,24 @@ public class Score : MonoBehaviour
     float timer;
 
     float maxTime;
+
+    AudioSource pointSound;
     // Start is called before the first frame update
     void Start()
     {
-        HighScoreCounterText.text = "HI   " + PlayerPrefs.GetInt("highscore", 0).ToString("00000");
+        HighScoreCounterText.text = "HI   " + PlayerPrefs.GetInt("highscore", 0).ToString("00000"); //texten med highscore text är det högsta scoret som någonsin uppmätts
         score = 0;
         scoreText = GetComponent<Text>();
-        maxTime = 0.1f;
+        maxTime = 0.1f; //maxtime är 0.1s
+
+        pointSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
-        if (timer >= maxTime)
+        if (timer >= maxTime)       //om det gått 0.1s så blir scoret 1 mer och scoretexten uppdateras
         {
             score++;
             scoreText.text = score.ToString("00000");
@@ -40,6 +44,11 @@ public class Score : MonoBehaviour
                 HighScoreCounterText.text = "HI   " + PlayerPrefs.GetInt("highscore", 0).ToString("00000");//Uppdaterar textrutan
             }
 
+        }
+
+        if (score % 100 == 0 && score != 0)       //Om score/100 inte har någon decimal
+        {
+            pointSound.Play();
         }
     }
 }

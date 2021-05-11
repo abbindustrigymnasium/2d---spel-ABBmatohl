@@ -19,7 +19,7 @@ public class Cloudscript : MonoBehaviour
 
         if (transform.position.x < -18f)
         {
-            transform.position = new Vector2(20f, transform.position.y);
+            transform.position = new Vector2(20f, transform.position.y);//teleporterar bjektet till höger om det kommer tillräckligt långt åt vänster
         }
 
     }
